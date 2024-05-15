@@ -1,0 +1,105 @@
+﻿@page
+@model LoginModel
+
+@{
+    var errorMessage = TempData["ErrorMessage"] as string;
+
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+        border-color:darkred;
+    }
+
+    .login-form {
+        width: 300px;
+    }
+
+    .border-danger {
+        border-color: red !important; 
+    }
+
+</style>        
+
+<body>
+    <div class="container p-3 my-3 border">
+        <form id="account" method="post" class="login-form" style="width: 300px; margin: 0 auto;">
+
+            <h2 class="text-center" style="color: Black;">
+                <i class="fas fa-user"></i> SIGN IN
+            </h2>
+            <hr />
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.EmailOrUsername" class="form-control" autocomplete="username" aria-required="true" placeholder=""
+                       oninput="validateEmail(this)" id="Email" onkeyup="EmailCheck(this)"
+                       required />
+                <label asp-for="Input.EmailOrUsername"><i class="fas fa-envelope"></i>Email/UserName<span style="color: red">*</span></label>
+         
+         
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" required id="password" />
+                <label asp-for="Input.Password" class="form-label">
+                    <i class="fas fa-lock"></i> Password<span style="color: red">*</span>
+                </label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" asp-for="Input.RememberMe" id="rememberMe" />
+                <label class="form-check-label" style="color: black;" for="rememberMe">Remember me</label>
+            </div>
+            <div>
+                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
+                    <i class="fas fa-right-to-bracket" onclick="toastr.error('Test error')"></i> SIGN IN
+                </button>
+
+                <div id="toaster"></div>
+
+            </div>
+            <div>
+                <script>
+                    $(document).ready(function () {
+                        var message = '@ViewData["Toastermessage"]'; 
+                        var type = '@ViewData["ToasterType"]';
+                        if (message && type) {
+                            showToaster(type, message);
+                        }
+                    });
+
+                </script>
+            </div>
+            <div class="additional-links">
+                <p>
+                    <a id="forgot-password" asp-page="./ForgotPassword" style="color: black;">Forgot your password?</a>
+                </p>
+                <p class="additional-links">
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" style="color: black;">Register as a new user</a>
+                </p>
+                <p>
+                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" style="color: black;">Resend email confirmation</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+    @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/toaster.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+   
+    }
+

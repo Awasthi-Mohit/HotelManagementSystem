@@ -1,0 +1,58 @@
+﻿@model IEnumerable<HotelManagementSystem_Domain.Data.BookingModel>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<style>
+    .profile-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4 text-center">Booking Details</h1>
+        <div class="row">
+            @foreach (var booking in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+
+                        <div class="card-header bg-primary text-white">
+                        </div>
+                        <div class="card-body">
+
+                            <p class="card-text"><strong><i>User Name</i>:</strong>@booking.ApplicationUser.Name</p>
+                            @if (booking.ApplicationUser != null && !string.IsNullOrEmpty(booking.ApplicationUser.ImageUrl))
+                            {
+                                <img src="@booking.ApplicationUser.ImageUrl" alt="Profile Image" class="img-fluid rounded-circle" width="100px" height="100px">
+                            }
+                            else
+                            {
+                                <p>No profile image available</p>
+                            }
+
+
+                            <br />
+                            <br />
+                            <h5> Transaction Details</h5>
+                            <p class="card-text"><strong>Customer Name: </strong> @booking.CustomerName</p>
+                            <p class="card-text"><strong>Customer Address: </strong> @booking.CustomerAddress</p>
+                            <p class="card-text"><strong>Transaction ID: </strong> @booking.TransationId</p>
+                            <p class="card-text"><strong>Payment Date: </strong> @booking.PaymentDate</p>
+                            <p class="card-text"><strong>Total Amount: </strong> @booking.TotalPayment</p>
+                            <p class="card-text"><strong>customerNo: </strong>@booking.CustomerPhoneNumber</p>
+                            <p class="card-text"><strong>CheckInDate: </strong>@booking.CheckInDate</p>
+                            <p class="card-text"><strong>CheckoutDate: </strong>@booking.CheckInDate</p>
+                         </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-danger">Back to List</a>
+    </div>
+</body>
+

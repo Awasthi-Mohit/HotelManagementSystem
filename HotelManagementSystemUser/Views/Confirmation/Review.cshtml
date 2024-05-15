@@ -1,0 +1,88 @@
+﻿@model HotelManagementSystem_Domain.Data.ReviewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="~/css/review.css" rel="stylesheet" />
+    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <form action="SubmitReviewForm" method="post">
+            <div class="wrapper">
+                <div class="master">
+                    <h1 class="text-center">Review your experience</h1>
+                    <div class="rating-component">
+                        <div class="status-msg">
+                            <label for="UserRating">Rate Hotel:</label>
+                            <input class="form-control" type="hidden" name="UserRating" id="UserRating" required />
+                            <div class="stars" id="stars">
+                                <i class="star far fa-star" data-index="1"></i>
+                                <i class="star far fa-star" data-index="2"></i>
+                                <i class="star far fa-star" data-index="3"></i>
+                                <i class="star far fa-star" data-index="4"></i>
+                                <i class="star far fa-star" data-index="5"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback-tags">
+                        <div class="tags-container" data-tag-set="5">
+                            <div class="make-compliment">
+                                <div class="compliment-container">
+                                    Give a compliment
+                                    <i class="far fa-smile-wink"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="UserComment">Comment:</label>
+                        <textarea name="UserComment" id="UserComment"></textarea>
+                    </div>
+                   <div class="form-group">
+                    <input type="hidden" name="HotelId" value="@Model.HotelId" />
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                const index = parseInt(star.dataset.index);
+                document.getElementById('UserRating').value = index;
+                stars.forEach((s, i) => {
+                    if (i < index) {
+                        s.classList.add('fas');
+                        s.classList.remove('far');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+    <script>
+        CKEDITOR.replace('UserComment');
+    </script>
+
+</body>
+
+</html>
+
+
+

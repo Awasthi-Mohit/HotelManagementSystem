@@ -1,0 +1,82 @@
+﻿@model HotelManagementSystem_Domain.Data.RoomTypeModel
+.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotel Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Bootstrap CSS - Adjust the version as needed -->
+    <style>
+        body {
+            background-color: gainsboro;
+        }
+    </style>
+</head>
+<body>
+
+   
+                <div class="col-md-6">
+
+                    <form asp-action="CreateRoom" method="post" enctype="multipart/form-data" class="my-4 hotel-form">
+                        @Html.AntiForgeryToken()
+                
+                        <div class="mb-3">
+                            <label asp-for="RoomType" class="form-label">Room Type</label>
+                            <select asp-for="RoomType" class="form-control">
+                                <option value="Delux Suite">Delux Suite</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                            <span asp-validation-for="RoomType" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label asp-for="Facilities" class="form-label">Facilities</label>
+                            <input asp-for="Facilities" class="form-control" />
+                            <span asp-validation-for="Facilities" class="text-danger"></span>
+
+                        </div>
+                      
+
+
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Price</label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+
+                        </div>
+                        <div class="mb-3">
+
+                            <div class="mb-3">
+                                <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+                                <div class="input-group">
+                                    <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" />
+                                </div>
+                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Create Room</button>
+                    </form>
+
+
+
+
+                </div>
+
+                
+ 
+
+</body>
+</html>
+
+@section Scripts
+{
+    <script src="~/js/image.js"></script>
+}
+

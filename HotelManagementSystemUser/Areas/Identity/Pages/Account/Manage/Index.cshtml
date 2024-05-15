@@ -1,0 +1,104 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<head>
+    <style>
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        .w-50 {
+            width: 50%;
+        }
+
+        .mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+    </style>
+</head>
+
+<form id="profile-form" method="post" enctype="multipart/form-data" class="w-50 mx-auto">
+    
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="form-floating mb-3">
+        <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
+        <label asp-for="Username" class="form-label">Username/Email</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."  />
+        <label asp-for="Input.PhoneNumber" class="form-label"></label>
+        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+    </div>
+    <div class ="form-floating mb-3">
+        @if (!string.IsNullOrEmpty(ViewData["UserImageUrl"] as string))
+        {
+            <div class="mb-3">
+                <img src="@Url.Content(@"~/"+ViewData["UserImageUrl"])" alt="Product Image"  width="150px" height="150px"/>
+
+
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <p>No image available</p>
+            </div>
+        }
+
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.ImageUrl" class="form-label">Image Upload</label>
+        <div class="input-group">
+            <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" />
+        </div>
+        <span asp-validation-for="Input.ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+    </div>
+    <div>
+    <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary"><i class="fas fa-file-export"></i>Update</button>
+    <a asp-controller="Home" asp-action="Index" class="w-100 btn btn-danger">
+        <i class="fas fa-backward"></i> Back
+    </a>
+
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/image.js"></script>
+}
+
+<script>
+    function showProfileImage() {
+        var imageUrl = "@Model.ImageUrl"; // Replace with your actual image URL
+
+      
+        var profileImagePreview = document.getElementById('imagePreview');
+        profileImagePreview.src = imageUrl;
+
+        var profileImageContainer = document.getElementById("profile-image-container");
+        profileImageContainer.style.display = "block";
+    }
+</script>

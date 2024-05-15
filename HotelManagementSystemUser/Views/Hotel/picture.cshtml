@@ -1,0 +1,117 @@
+﻿@model HotelManagementSystem_Domain.Data.PictureViewModel
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<style>
+    .delete-button {
+        position: absolute;
+        top: 5px;
+        left: 150px;
+    }
+
+</style>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Add Picture</h2>
+  
+        <form asp-action="editpicture" asp-controller="Hotel" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+                <div class="input-group">
+                    <input type="file" name="files" id="uploadbox" class="form-control" multiple onchange="previewImages(event)" required />
+                </div>
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary" id="notificationButton">Upload Pictures</button>
+
+            <div class="mb-3" id="imagePreviewContainer">
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<div class="row">
+    @{
+        int index = 0;
+    }
+    @foreach (var picture in ViewBag.Pictures)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3" id="card-@index">
+                <div class="card-body">
+                    <a asp-action="Delete" asp-controller="Hotel" asp-route-pictureid="@picture.id" asp-route-roomid="@picture.RoomId" class="btn btn-success"><i class="fas fa-times"></i></a>
+                </div>
+                <h5 class="card-title">Picture</h5>
+                <div class="card-img-top">
+                   <img src="@Url.Content("~/"+ picture.ImageUrl)" alt="room Image" width="100%" />                    
+                   
+                </div>
+            </div>
+        </div>
+        
+        
+        index++;
+    }
+</div>
+
+
+
+@section Scripts
+{
+    <script src="~/js/image.js"></script>
+}
+
+<script>
+    function previewImages(event) {
+        var previewContainer = document.getElementById('imagePreviewContainer');
+        previewContainer.innerHTML = ''; // Clear previous previews
+
+        var files = event.target.files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Preview';
+                img.className = 'img-fluid rounded';
+                img.style.maxWidth = '100%';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+
+<script>
+    document.getElementById('notificationButton').addEventListener('click', function () {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                    showNotification();
+                } else {
+                    console.log('Notification permission denied.');
+                }
+            });
+        } else {
+            showNotification();
+        }
+    });
+
+    function showNotification() {
+        var notification = new Notification('Hotel Notification', {
+            body: 'Hotel Created.'
+        });
+
+        notification.onclick = function () {
+            console.log('Notification clicked.');
+
+            // window.location.href = 'https://example.com';
+        };
+    }
+</script>

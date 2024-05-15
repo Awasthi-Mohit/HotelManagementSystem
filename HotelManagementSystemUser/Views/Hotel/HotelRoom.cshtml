@@ -1,0 +1,79 @@
+﻿@model HotelManagementSystem_Domain.Data.RoomTypeModel
+
+<head>
+    <style>
+        body {
+            background-color: #e9ecef; 
+            margin: 0;
+        }
+
+        .hotel-form {
+            max-width: 400px;
+            margin: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .img-fluid {
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+    </style>
+</head>
+<form asp-action="HotelRoom" method="post" enctype="multipart/form-data" class="my-4 hotel-form">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="RoomType" class="form-label">Room Type</label>
+        <select asp-for="RoomType" class="form-control">
+            <option value="Delux Suite">Delux Suite</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Studio">Studio</option>
+        </select>
+        <span asp-validation-for="RoomType" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Facilities" class="form-label">Facilities</label>
+        <input asp-for="Facilities" class="form-control" />
+        <span asp-validation-for="Facilities" class="text-danger"></span>
+
+    </div>
+    
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Price</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+        <div class="input-group">
+            <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" />
+        </div>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Room</button>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+</form>
+@section Scripts
+{
+    <script src="~/js/image.js"></script>
+}
+ 

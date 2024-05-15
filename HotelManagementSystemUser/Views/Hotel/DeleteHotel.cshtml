@@ -1,0 +1,72 @@
+﻿@model HotelManagementSystem_Domain.Data.HotelModel
+<head>
+    <style>
+        body {
+            background-color: #e9ecef; /* Light gray background color for the entire body */
+            margin: 0; /* Remove default margin for a cleaner look */
+        }
+
+        .hotel-form {
+            max-width: 400px;
+            margin: auto;
+            background-color: #f8f9fa; /* Light gray background color for the form */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .img-fluid {
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+    </style>
+</head>
+
+
+<form asp-action="DeleteHotelConfirmed" method="post" enctype="multipart/form-data" class="my-4 hotel-form">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Hotel Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Place" class="form-label">Location</label>
+        <input asp-for="Place" class="form-control" />
+        <span asp-validation-for="Place" class="text-danger"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+        <div class="input-group">
+            <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" />
+        </div>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+    </div>
+
+    <button type="submit" id="showNotificationBtn" class="btn btn-primary">Delete Hotel</button>
+</form>
+
+
+
+@section Scripts
+{
+    <script src="~/js/notificationuser.js"></script>
+    <script src="~/js/image.js"></script>
+
+}

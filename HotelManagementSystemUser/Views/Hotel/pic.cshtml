@@ -1,0 +1,339 @@
+﻿@model List<HotelManagementSystem_Domain.Data.Picturemenul>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <title>Image Carousel</title>
+    <style>
+        :root {
+            --color-text: #2c3e50;
+            --color-text-light: #34495e;
+            --color-white: #ecf0f1;
+            --shadow-dark: 0 2rem 6rem rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 2rem 5rem rgba(0, 0, 0, 0.06);
+            --line: 1px solid var(--color-grey-light-2);
+        }
+
+      
+       
+
+        button {
+            padding: 0;
+            margin: 0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-white);
+            cursor: pointer;
+            position: absolute;
+            color: var(--color-white);
+            font-size: 3rem;
+            transform: translateY(-50%);
+            top: 50%;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            text-decoration: none;
+            margin: 0;
+          
+        }
+
+        .carousel {
+            width: 50vw;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .carousel_slider {
+            width: 100%;
+            height: 87%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content_inner_slider {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .img {
+            min-width: 50vw;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .prev_button {
+            left: 0;
+        }
+
+        .next_button {
+            right: 0;
+        }
+
+        .dots {
+            display: flex;
+            margin: 1rem 0;
+        }
+
+        .dot {
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid var(--color-text-light);
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+    
+        .auto_slide {
+        }
+
+    </style>
+</head>
+
+ <body class="text-capitalize">
+    <section class="carousel">
+        <div class="carousel_slider">
+            <div class="content_inner_slider">
+                 @if (Model != null && Model.Any())
+                { 
+                    @foreach (var pic in Model)
+                    {
+                        @if (!string.IsNullOrEmpty(pic.ImageUrl))
+                        {
+                          <img src="@Url.Content("~/" + pic.ImageUrl)" alt="Image" class="img"> 
+                        }
+                        else
+                        {
+                            <p>Invalid image URL for this room.</p>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>No images found for this room.</p>
+                }
+            </div>
+            <button class="prev_button">
+                <i class="fa-solid fa-chevron-left left"></i>
+            </button>
+            <button class="next_button">
+                <i style="right: 0" class="fa-solid fa-chevron-right right"></i>
+            </button>
+        </div>
+        <ul class="dots">
+            @if (Model != null && Model.Any())
+            {
+                @for (var i = 0; i < Model.Count(); i++)
+                {
+                    <li class="dot" value="@i"></li>
+                }
+            }
+        </ul>
+        <div class="form">
+            <input type="checkbox" class="auto_slide" id="slide">
+            <label for="slide">Auto Slide</label>
+        </div>
+       
+
+    </section>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>
+<script>
+
+    window.onload = function () {
+        const helpers = (function () {
+            function getDOMElements(DOMSelectors) {
+                let DOMElements = {};
+                for (let selector in DOMSelectors) {
+                    if (DOMSelectors.hasOwnProperty(selector)) {
+                        DOMElements[selector] = document.querySelector(
+                            DOMSelectors[selector]
+                        );
+                    }
+                }
+                return DOMElements;
+            }
+            return {
+                getDOMElements
+            };
+        })();
+
+        const modal = (function () {
+            const state = {
+                counter: 0,
+                intervalID: 0
+            };
+            let CONSTANTS = {
+                ACTIVE_CLASS_NAME: "active",
+                TIMER: 1500,
+                TRANSITION: "all .3s ease-out"
+            };
+            function addConstant(key, value) {
+                CONSTANTS[key] = value;
+            }
+
+            return {
+                state,
+                CONSTANTS,
+                addConstant
+            };
+        })();
+
+        const view = (function (helpers) {
+            const DOMSelectors = {
+                carouselInnerSlider: ".content_inner_slider",
+                dots: ".dots",
+                slide: "#slide",
+                prevButton: ".prev_button",
+                nextButton: ".next_button",
+                carouselImages: ".content_inner_slider > img",
+                dot: ".dot"
+            };
+            const DOMElements = helpers.getDOMElements(DOMSelectors);
+            const CAROUSEL_IMAGES = [
+                ...document.querySelectorAll(DOMSelectors.carouselImages)
+            ];
+            const DOTS = [...document.querySelectorAll(DOMSelectors.dot)];
+            function moveSliderToIndex(IMAGE_SIZE, index) {
+                DOMElements.carouselInnerSlider.style.transform = `translateX(-${IMAGE_SIZE * index
+                    }px)`;
+            }
+            function addClassToIndex(className, index) {
+                CAROUSEL_IMAGES[index].classList.add(className);
+            }
+            function removeClassToIndex(className, index) {
+                CAROUSEL_IMAGES[index].classList.remove(className);
+            }
+            function addBackGroundToCurrentIndex(index) {
+                DOTS[index].style.background = "#000";
+            }
+            function removeBackGroundToCurrentIndex(index) {
+                DOTS[index].style.background = "transparent";
+            }
+            function setTransition(element, transition) {
+                element.style.transition = `${transition}`;
+            }
+            return {
+                DOMSelectors,
+                moveSliderToIndex,
+                addClassToIndex,
+                removeClassToIndex,
+                addBackGroundToCurrentIndex,
+                removeBackGroundToCurrentIndex,
+                setTransition
+            };
+        })(helpers);
+
+        const controller = (function (modal, view, helpers) {
+            const DOMSelectors = view.DOMSelectors;
+            const DOMElements = helpers.getDOMElements(DOMSelectors);
+            function initApp() {
+                const imageSize = DOMElements.carouselInnerSlider.clientWidth;
+                const imagesCount =
+                    [...document.querySelectorAll(DOMSelectors.carouselImages)].length - 1;
+                modal.addConstant("IMAGE_SIZE", imageSize);
+                modal.addConstant("TOTAL_IMAGES", imagesCount);
+                view.moveSliderToIndex(modal.CONSTANTS.IMAGE_SIZE, modal.state.counter);
+                handleAdding();
+                DOMElements.nextButton.addEventListener("click", handleNextImage);
+                DOMElements.prevButton.addEventListener("click", handlePrevImage);
+                DOMElements.dots.addEventListener("click", handleDotClick);
+                DOMElements.slide.addEventListener("change", handleSlide);
+            }
+            function removeEventListeners() {
+                DOMElements.nextButton.removeEventListener("click", handleNextImage);
+                DOMElements.prevButton.removeEventListener("click", handlePrevImage);
+                DOMElements.dots.removeEventListener("click", handleDotClick);
+                DOMElements.slide.removeEventListener("change", handleSlide);
+            }
+            function handleNextImage() {
+                handleRemove();
+                if (modal.state.counter === modal.CONSTANTS.TOTAL_IMAGES) {
+                    modal.state.counter = -1;
+                }
+                modal.state.counter += 1;
+                handleAdding();
+                view.moveSliderToIndex(modal.CONSTANTS.IMAGE_SIZE, modal.state.counter);
+            }
+            function handlePrevImage() {
+                handleRemove();
+                if (modal.state.counter === 0) {
+                    modal.state.counter = modal.CONSTANTS.TOTAL_IMAGES + 1;
+                }
+                modal.state.counter -= 1;
+                handleAdding();
+                view.moveSliderToIndex(modal.CONSTANTS.IMAGE_SIZE, modal.state.counter);
+            }
+            function handleDotClick(event) {
+                const value = Number(event.target.value);
+                if (!isNaN(value)) {
+                    handleRemove();
+                    modal.state.counter = value;
+                    view.moveSliderToIndex(modal.CONSTANTS.IMAGE_SIZE, modal.state.counter);
+                    handleAdding();
+                }
+            }
+            function handleSlide(event) {
+                const isChecked = event.target.checked;
+                if (isChecked) {
+                    modal.state.intervalID = setInterval(() => {
+                        handleNextImage();
+                    }, modal.CONSTANTS.TIMER);
+                } else {
+                    clearInterval(modal.state.intervalID);
+                    modal.state.intervalID = null;
+                }
+            }
+            function handleRemove() {
+                view.removeClassToIndex(
+                    modal.CONSTANTS.ACTIVE_CLASS_NAME,
+                    modal.state.counter
+                );
+                view.removeBackGroundToCurrentIndex(modal.state.counter);
+            }
+            function handleAdding() {
+                view.addClassToIndex(
+                    modal.CONSTANTS.ACTIVE_CLASS_NAME,
+                    modal.state.counter
+                );
+                view.addBackGroundToCurrentIndex(modal.state.counter);
+            }
+            DOMElements.carouselInnerSlider.addEventListener(
+                "transitionstart",
+                removeEventListeners
+            );
+            DOMElements.carouselInnerSlider.addEventListener("transitionend", initApp);
+            view.setTransition(
+                DOMElements.carouselInnerSlider,
+                modal.CONSTANTS.TRANSITION
+            );
+            return {
+                initApp,
+                removeEventListeners
+            };
+        })(modal, view, helpers);
+
+        controller.initApp();
+
+        window.addEventListener("resize", () => {
+            controller.removeEventListeners();
+            controller.initApp();
+        });
+    };
+
+</script>

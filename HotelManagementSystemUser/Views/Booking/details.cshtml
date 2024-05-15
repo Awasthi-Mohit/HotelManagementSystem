@@ -1,0 +1,39 @@
+﻿@model List<HotelManagementSystem_Domain.Data.BookingModel>
+<br />
+<br />
+<br />
+<h2 class="text-center text-primary"> Your Booking Details</h2>
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <div class="card-body">
+            <div class="row">
+                @foreach (var booking in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Name :@booking.CustomerName</h5>
+                                <p class="card-text">Payment Date: @booking.PaymentDate.ToString("yyyy-MM-dd")</p>
+                                <p class="card-text">Contact No: @booking.CustomerPhoneNumber</p>
+                                <p class="card-text">Address: @booking.CustomerAddress</p>
+                                <p class="card-text">Total Payment: @booking.TotalPayment</p>
+                                <p class="card-text">CheckInDate: @booking.CheckInDate</p>
+                                <p class="card-text">CheckOutDate: @booking.CheckOutDate</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+        <p style="color: red; text-align: center;">
+            <i class="fas fa-circle-exclamation"></i> No Hotel Booked Yet.
+        </p>
+    </div>
+}

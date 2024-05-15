@@ -1,0 +1,55 @@
+﻿@model IEnumerable<HotelManagementSystem_Domain.Data.BookingModel>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Booking Details</title>
+  
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Bookinguser Details</h1>
+
+        <div class="scrollable-container" style="height: 800px; overflow: auto;">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer Name</th>
+                            <th>Customer Address</th>
+                            <th>Transaction ID</th>
+                            <th>Payment Date</th>
+                            <th>Contact Number</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model)
+                        {
+                            <tr>
+                                <td>@booking.Id</td>
+                                <td>@booking.CustomerName</td>
+                                <td>@booking.CustomerAddress</td>
+                                <td>@booking.TransationId</td>
+                                <td>@booking.PaymentDate</td>
+                                <td>@booking.CustomerPhoneNumber</td>
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+
+</html>
+<script>
+    $(document).ready(function () {
+        const container = $('.scrollable-container');
+        const ps = new PerfectScrollbar(container[0]);
+    });
+</script>
+

@@ -1,0 +1,97 @@
+﻿@model List<HotelManagementSystem_Domain.Data.ReviewViewModel>
+
+@using Microsoft.AspNetCore.Identity
+@using System.Text.RegularExpressions
+
+@{
+    ViewData["Title"] = "Hotel Reviews";
+   
+
+}
+<br/>
+<br/>
+<h1 class="text-center">Customer Reviews</h1>
+<head>
+    <style>
+    .yellow-star {
+        color: yellow;
+    }
+    .p{
+        color:red;
+    }
+</style>
+</head>
+<div class="container">
+    @if (Model.Count > 0)
+    {
+        <div class="row">
+            @foreach (var review in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <div class="user-picture">
+                                <img id="picture" src="@Url.Content(@"~/"+review.applicationUser.ImageUrl)" alt="User Image" class="img-fluid " width="100px" height="100px" />
+                            </div>
+                            <h5 class="card-title">Name</h5>
+                            <p class="card-text">@review.applicationUser.Name</p>
+
+                            <h5 class="card-title">Rating</h5>
+                            <div class="rating">
+                                @if (int.TryParse(review.UserRating, out int rating) && rating >= 0 && rating <= 5)
+                                {
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < rating)
+                                        {
+                                            <span class="fa fa-star checked yellow-star"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa fa-star"></span>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-danger">Error parsing rating</p>
+                                }
+                            </div>
+
+                            <h5 class="card-">Comment</h5>
+                            <div> 
+                                <div class=" rounded-circle">@Html.Raw(review.UserComment)</div>
+                            </div>
+                          
+                            
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <br/>
+        <p class="text-center text-danger">No reviews available for this hotel.</p>
+    }
+</div>
+
+
+<div class="text-center">
+    <a asp-action="index" class="btn btn-danger">Back to List</a>
+</div>  
+@* For the image 
+        const nodes = document.getElementById("picture");
+
+ *@
+ <script>
+
+    const nodes = document.getElementById("picture");
+    for (let i = 0; i < nodes.length; i++) {
+        nodes[i].style.height = '150px';
+        nodes[i].style.width = '150px';
+    }
+   
+</script>

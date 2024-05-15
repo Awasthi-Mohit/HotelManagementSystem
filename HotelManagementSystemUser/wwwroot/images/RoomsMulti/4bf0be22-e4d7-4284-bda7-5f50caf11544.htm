@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="/css/Side.css">
+    <link rel="stylesheet" href="/HotelManagementSystemUser.styles.css">
+
+    <link rel="stylesheet" href="/css/site.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0">
+    <style>
+        /* Custom styles */
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+
+        #sidebar {
+            width: 250px;
+            background: lightskyblue; 
+             
+            color: #fff;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 9999; /* Ensure sidebar appears on top */
+        }
+
+        #content {
+            width: calc(100% - 250px);
+            margin-left: 250px;
+            transition: all 0.3s;
+            padding: 20px; /* Adjust content padding */
+        }
+
+        .sidebar-header {
+            padding: 20px;
+        }
+
+            .sidebar-header button {
+                width: 100%;
+                padding: 10px;
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 1.25rem;
+                cursor: pointer;
+                outline: none;
+            }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 250px; /* Match sidebar width */
+            padding: 10px;
+            background: #144667;
+            text-align: center;
+        }
+
+            .sidebar-footer button {
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 1.25rem;
+                cursor: pointer;
+                outline: none;
+            }
+
+        #sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #content {
+            width: 100%;
+            margin-left: 0;
+        }
+
+        .navbar-sm {
+            padding: 5px 10px; 
+            min-height: auto; 
+            font-size: 14px; 
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="dot">
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <button type="button" class="sidebarCollapse btn btn-primary navbar-btn">
+                       
+                        <i class=" fas fa-sharp fa-solid fa-sliders" style="margin-right: 236px;"></i>
+                       
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </button>
+                </div>
+                <div class="container-fluid">
+                    <ul class="list-unstyled components">
+                        <li>
+                            <a class="nav-link text-dark" href="/">
+                                <i class="fas fa-home"></i> <br />  Home
+                            </a>
+                          
+                        </li>
+
+                       
+                        
+                        
+
+
+  <li class="nav-item">
+      <a class="nav-link text-dark" href="/Identity/Account/Login">
+
+            <i class="fas fa-sign-in-alt"></i>     <br />Login
+        </a>
+  </li>
+
+                    </ul>
+                </div>
+                <div class="sidebar-footer">
+                    <button type="button" class="sidebarCollapse btn btn-primary navbar-btn">
+                        <i class="glyphicon glyphicon-menu-left"></i>
+                        <i class="glyphicon glyphicon-menu-right"></i>
+                    </button>
+                </div>
+            </nav>
+            <div id="content">
+                <div class="d">
+                </div>
+                <main class="col-md-8 ms-sm-auto col-lg-11 px-md-3">
+                    
+
+
+    
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh; 
+    }
+
+    .login-form {
+        width: 300px; 
+    }
+
+</style>
+
+
+<body>
+    <div class="container">
+        <form id="account" method="post" class="login-form" style="width: 300px; margin: 0 auto;">
+            <h2 class="text-center" style="color: black;">
+                <i class="fas fa-user"></i> Log In
+            </h2>
+            <hr />
+
+            
+            <div class="form-floating mb-3">
+                <input class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" type="email" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Input_Email" name="Input.Email" value="" />
+                <label class="form-label" for="Input_Email">
+                    <i class="fas fa-envelope"></i>
+                </label>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Input.Email" data-valmsg-replace="true"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" type="password" data-val="true" data-val-required="The Password field is required." id="Input_Password" name="Input.Password" />
+                <label class="form-label" for="Input_Password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="rememberMe" data-val="true" data-val-required="The Remember me? field is required." name="Input.RememberMe" value="true" />
+                <label class="form-check-label" style="color: black;" for="rememberMe">Remember me</label>
+            </div>
+            <div>
+                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
+                    <i class="fas fa-right-to-bracket"></i> Log in
+                </button>
+            </div>
+            <div class="additional-links">
+                <p>
+                    <a id="forgot-password" style="color: black;" href="/Identity/Account/ForgotPassword">Forgot your password?</a>
+                </p>
+                <p>
+                    <a style="color: black;" href="/Identity/Account/Register?returnUrl=%2F">Register as a new user</a>
+                </p>
+                <p>
+                    <a id="resend-confirmation" style="color: black;" href="/Identity/Account/ResendEmailConfirmation">Resend email confirmation</a>
+                </p>
+            </div>
+        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EWepR3a9hBHmAK75JoLnvqeQS_e7XRW2W8dPE0vh12t1sBaZviCNN_MJSUGJIw70tnpa9rHWyEAva0CzblDQywXC8_hGKXK5y2JX4S5uy9sytLBWz7w4OtT-3Egis3vJv8bpk5jOvzbGpXJaS0ligE" /><input name="Input.RememberMe" type="hidden" value="false" /></form>
+    </div>
+
+</body>
+
+<div class="col-md-6 col-md-offset-2">
+    <section>
+        <h3>Use another service to log in.</h3>
+        <hr />
+                <form id="external-account" method="post" class="form-horizontal" action="/Identity/Account/ExternalLogin?returnUrl=%2F">
+                    <div>
+                        <p>
+                                    <button type="submit" class="btn btn-outline-success" name="provider" value="Facebook" title="login using facebook">
+                                        Facebook
+                                        <img src="/images/login/facebook.png" width="50" height="50" />
+                                    </button>
+                                        <button type="submit" class="btn btn-outline-success" name="provider" value="Google" title="login using Google">
+                                            Google
+                                            <img src="/images/login/google.jpg" width="50" height="50" />
+                                        </button>
+                        </p>
+                    </div>
+                <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EWepR3a9hBHmAK75JoLnvqeQS_e7XRW2W8dPE0vh12t1sBaZviCNN_MJSUGJIw70tnpa9rHWyEAva0CzblDQywXC8_hGKXK5y2JX4S5uy9sytLBWz7w4OtT-3Egis3vJv8bpk5jOvzbGpXJaS0ligE" /></form>
+    </section>
+</div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/e19c476714.js"></script>
+    <script src="/js/Sidebar.js"></script>
+    <script src="/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0"></script>
+    
+    
+    <script src="/Identity/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="/Identity/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+
+
+
+</body>
+</html>
+<script>
+        // Sidebar.js
+
+    $(document).ready(function() {
+        // Function to handle sidebar collapse button click
+        $('.sidebarCollapse').on('click', function() {
+            $('#sidebar').toggleClass('active'); // Toggle 'active' class on sidebar
+            $(this).toggleClass('active'); // Toggle 'active' class on sidebar collapse button
+        });
+    });
+ 
+</script>

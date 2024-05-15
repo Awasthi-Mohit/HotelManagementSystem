@@ -1,0 +1,36 @@
+﻿/* Custom modal styles */
+
+/* Background overlay */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+}
+
+/* Modal content */
+.modal-content {
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Drop shadow */
+}
+
+/* Modal header */
+.modal-header {
+    background-color: #007bff; /* Header background color */
+    color: #fff; /* Header text color */
+    border-bottom: none; /* Remove border */
+}
+
+/* Modal body */
+.modal-body {
+    padding: 20px; /* Add padding */
+}
+
+/* Modal footer */
+.modal-footer {
+    border-top: none; /* Remove border */
+    padding: 10px 20px; /* Add padding */
+}
+
+/* Close button */
+.close {
+    color: #fff; /* Close button text color */
+    opacity: 1; /* Make close button fully opaque */
+}

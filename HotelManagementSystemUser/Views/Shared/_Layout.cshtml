@@ -1,0 +1,237 @@
+﻿@using HotelManagementSystem_Domain.Utility
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.css" integrity="sha384-PRrBWpTYU/l8Byrca6VUy5oxfT8B1Bx6Xbth4B0/9/3ScnM73S8MNQqGfls2B+zz" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/Side.css">
+    <link rel="stylesheet" href="~/HotelManagementSystemUser.styles.css">
+    <link href="~/css/custommodal.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <style>
+        /* Custom styles */
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+
+        #sidebar {
+            width: 250px;             
+            color: #fff;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 9999; /* Ensure sidebar appears on top */
+        }
+
+        #content {
+            width: calc(100% - 250px);
+            margin-left: 250px;
+            transition: all 0.3s;
+            padding: 20px; /* Adjust content padding */
+        }
+
+        .sidebar-header {
+            padding: 20px;
+        }
+
+            .sidebar-header button {
+                width: 100%;
+                padding: 10px;
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 1.25rem;
+                cursor: pointer;
+                outline: none;
+            }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 250px; /* Match sidebar width */
+            padding: 10px;
+            background:;
+            text-align: center;
+        }
+
+            .sidebar-footer button {
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 1.25rem;
+                cursor: pointer;
+                outline: none;
+            }
+
+        #sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #content {
+            width: 100%;
+            margin-left: 0;
+        }
+
+        .navbar-sm {
+            padding: 5px 10px; 
+            min-height: auto; 
+            font-size: 14px; 
+        }
+        /* Ensure the wrapper takes full height */
+        html, body, .wrapper {
+            height: 100%;
+        }
+
+        
+        #sidebar {
+            position: fixed; /* Fixed position */
+            top: 0;
+            left: 0;
+            height: 100%; /* Full height */
+            width: 250px; /* Adjust width as needed */
+            z-index: 1031; /* Ensure it's above other content */
+            /* Other styling */
+        }
+      
+        #content {
+            margin-left: 250px; /* Adjust to match sidebar width */
+            padding-top: 56px; /* Adjust to match navbar height */
+        }
+        .navbar {
+            position: fixed; /* Fixed position */
+            top: 0;
+            left: 291px; /* Adjust to match sidebar width */
+            width: calc(98% - 250px); /* Adjust to match sidebar width */
+            z-index: 1031; /* Ensure it's above other content */
+            /* Other styling */
+        }
+
+   
+
+    </style>
+
+</head>
+
+<body>
+    <div class="dot">
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-header">
+                        <button type="button" class="sidebarCollapse btn btn-primary navbar-btn">
+                            <i class="fas fa-bars fa-1x"></i>
+
+                            <div></div>
+                            <div></div>
+                            <div></div>
+
+                        </button>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <ul class="list-unstyled components">
+                        <li>
+                                <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home text-white"></i> <br />  Home
+                            </a>
+                          
+                        </li>
+
+                        @if (User.IsInRole(SD.Role_Individual))
+                        {
+                            <li>
+                                    <a class="nav-link text-white-50" asp-controller="Booking" asp-action="details">
+                                        
+                                        <i class="fas fa-circle-info text-white"></i>
+                                Details
+                            </a>
+                            </li>
+                        }
+                       
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                    <a class="nav-link text-white-50" asp-area="" asp-controller="Hotel" asp-action="Index">
+                                    <i class="fas fa-solid fa-hotel text-white"></i>  <br />Hotel
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50 " asp-controller="userdetails" asp-action="index">
+                                        <i class="fas fa-circle-info   text-white"></i><br /> Booking Details
+
+                                </a>
+                            </li>
+                         
+                        }
+                       
+                        
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="">
+                    <button type="button" class="sidebarCollapse btn btn-primary navbar-btn ">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+
+                    </div>
+                </div>
+            </nav>
+            <div id="content">
+                <div class="d">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                      <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 justify-content-end navbar-sm">
+                        <partial name="_logout.cshtml" />
+                      </nav>
+
+                    }
+                </div>
+                <main class="col-md-8 ms-sm-auto col-lg-11 px-md-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js" integrity="sha384-JMlbjFG6fqG5qwgH6L1/7hzEShvMXp+AD6tqqzLy7H8QwaBr0Omk0nJqxzZJKL4p" crossorigin="anonymous"></script>
+    <script src="~/js/registerpage.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/e19c476714.js"></script>
+    <script src="~/js/Sidebar.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+ <script>
+        // Sidebar.js
+
+    $(document).ready(function() {
+        $('.sidebarCollapse').on('click', function() {
+            $('#sidebar').toggleClass('active'); // Toggle 'active' class on sidebar
+            $(this).toggleClass('active'); // Toggle 'active' class on sidebar collapse button
+        });
+    });
+ a
+</script>

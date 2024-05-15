@@ -1,0 +1,91 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Room Picture Slider";
+}
+<style>
+    .slider {
+        position: relative; /* Ensure relative positioning for absolute positioned buttons */
+    }
+
+    .controls {
+        position: absolute; /* Position buttons relative to the slider */
+        top: 50%; /* Position vertically in the middle of the slider */
+        left: 0; /* Position horizontally at the left of the slider */
+        transform: translateY(-50%); /* Adjust vertical position */
+    }
+
+        .controls button {
+            margin: 0 5px; /* Add margin between buttons */
+            padding: 5px 10px; /* Add padding to buttons */
+            background-color: ghostwhite; /* Set background color */
+            color: #fff; /* Set text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Add border radius */
+            cursor: pointer; /* Change cursor on hover */
+        }
+
+            .controls button:hover {
+                background-color: white; /* Darker background color on hover */
+            }
+
+</style>
+<div class="slider">
+    @foreach (var imageUrl in Model)
+    {
+        <div class="slide">
+            <img src="@Url.Content("~/"+@imageUrl)" height="100%" width="100%" alt="Room Picture">
+
+        </div>
+    }
+</div>
+
+<div class="controls">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+</div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        let intervalId;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = (i === index) ? 'block' : 'none';
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
+            showSlide(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
+            showSlide(currentIndex);
+        }
+
+        function startAutoSlide() {
+            intervalId = setInterval(nextSlide, 3000); // Change slide every 3 seconds (3000 milliseconds)
+        }
+
+        function stopAutoSlide() {
+            clearInterval(intervalId);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopAutoSlide(); // Stop auto sliding when manual navigation occurs
+        });
+
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopAutoSlide(); // Stop auto sliding when manual navigation occurs
+        });
+
+        showSlide(currentIndex);
+        startAutoSlide(); // Start automatic sliding when the page loads
+    </script>}

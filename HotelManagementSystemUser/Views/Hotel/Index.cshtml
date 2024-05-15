@@ -1,0 +1,103 @@
+﻿@model IEnumerable<HotelManagementSystem_Domain.Data.HotelModel>
+<head>
+    <style>
+        body {
+            /*             background-image: url('/images/login/front_desk.jpg');
+                 */ background-color: gainsboro;
+        }
+
+        .card {
+            border: 0;
+            overflow: hidden; /* Ensure overflowing images are hidden */
+        }
+        /* Styling the scrollbar for WebKit-based browsers like Chrome and Safari */
+        .scrollable-container::-webkit-scrollbar {
+            width: 12px; /* width of the scrollbar */
+        }
+
+        .scrollable-container::-webkit-scrollbar-track {
+            background: #f0f0f0; /* background color of the scrollbar track */
+        }
+
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #3498db; /* color of the scrollbar thumb */
+            border-radius: 6px; /* rounding the corners of the thumb */
+            border: 3px solid transparent; /* providing some spacing */
+        }
+
+            /* You can also define hover effects for the scrollbar thumb */
+            .scrollable-container::-webkit-scrollbar-thumb:hover {
+                background-color: #2980b9; /* darker shade on hover */
+            }
+
+        /* For Firefox, you can use the following styling (limited support compared to WebKit) */
+        .scrollable-container {
+            scrollbar-width: thin; /* makes the scrollbar thinner */
+            scrollbar-color: #3498db #f0f0f0; /* color for thumb and track */
+        }
+
+        /*  .longEnough {
+                    max-height: 220px;
+                    width: 350px;
+                    overflow: auto;
+                } */
+    </style>
+
+</head>
+    <body>
+<div>
+    <br/>
+    <br/>
+        <a asp-controller="Hotel" asp-action="Create" class="btn btn-primary ">
+            <i class="fas fa-plus"></i>
+        Create Hotel
+    </a>
+</div>
+    <div class="scrollable-container" style="height: 1000px; overflow: auto;">
+        <div class="row">
+            @foreach (var hotel in Model)
+            {
+                <div class="col-lg-3 col-md-6">
+                    <div class="row p-2">
+                        <div class="col-12 p-1" style="border: 2px solid black; border-radius: 15px;">
+
+                            <div class="card" style="border: 0px; text-align: center;">
+                                <!-- Centering the content -->
+
+                                <div class="pl-1">
+                                    <p class="card-title h5"><b style="color:#2c3e50;"></b></p>
+                                    <p class="card-title text-primary">Hotel Name:-<b>@hotel.Name</b></p>
+                                </div>
+
+                                <div class="card" style="border: 1px; display: flex; justify-content: center; align-items: center;">
+
+                                    <img src="@Url.Content(hotel.ImageUrl)" alt="Product Image" height="200px" />
+                                </div>
+
+                                <div class="pl-1">
+                                    <p class="card-title h5"><b style="color:#2c3e50;"></b></p>
+                                    <p class="card-title text-primary">Location:-<b>@hotel.Place</b></p>
+                                </div>
+
+                                <div>
+                                    <button onclick="window.location.href='@Url.Action("Room", "Hotel", new { hotelId = hotel.Id })'" class="btn btn-primary"> <i class="fas fa-address-card"></i>AddRoom</button>
+                                    <button onclick="window.location.href='@Url.Action("EditHotel", "Hotel", new { id = hotel.Id })'" class="btn btn-success"><i class="fas fa-user-pen"></i>EditHotel</button>
+                                    <button onclick="window.location.href='@Url.Action("DeleteHotel", "Hotel", new { id = hotel.Id })'" class="btn btn-success"><i class="fas fa-trash"></i>DeleteHotel</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</body>
+<script>
+    $(document).ready(function () {
+        const container = $('.scrollable-container');
+        const ps = new PerfectScrollbar(container[0]);
+    });
+</script>

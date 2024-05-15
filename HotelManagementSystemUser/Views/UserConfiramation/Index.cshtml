@@ -1,0 +1,132 @@
+﻿@model HotelManagementSystem_Domain.Data.ViewModels.ConfirmationdetailsViewmodel
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="~/css/review.css" rel="stylesheet" />
+    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+    <style>
+        .star {
+            color: darkgoldenrod;
+        }
+
+        .h1 {
+            color: aquamarine;
+            text-align: center;
+        }
+
+        .h2 {
+            color: antiquewhite;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<div class="container text-capitalize">
+    <div class="row">
+        <div class="col-10 offset-1">
+            <h1 class="text-center" style="color:forestgreen">Booking Confirmed Successfully</h1>
+            <br />
+            <div class="mx-auto" style="max-width: 50%;">
+                <img src="~/images/imagesconfiramation.png" style="width: 20%" />
+            </div>
+        </div>
+    </div>
+
+    @* <div class="row">
+    <div class="col-10 offset-1 mt-3">
+    <div class="card">
+    <div class="card-body">
+    <h5 class="card-title">Booking Details</h5>
+    <p class="card-text">Name: @Model.Booking.CustomerName</p>
+    <p class="card-text">Payment Date: @Model.Booking.PaymentDate</p>
+    <p class="card-text">Contact No: @Model.Booking.CustomerPhoneNumber</p>
+    <p class="card-text">Customer Address: @Model.Booking.CustomerAddress</p>
+    <p class="card-text">Total Amount: @Model.Booking.TotalPayment</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> *@
+
+    <div class="row">
+        <div class="col-10 offset-1" style="color: forestgreen">
+            <br />
+            <h1 class="">Thank you for Booking <i class="fas fa-smile"></i></h1>
+        </div>
+    </div>
+    <div class="col-10">
+        <div class="row">
+            <h5 class="card-title">Booking Details</h5>
+            <p class="card-text">Name: @Model.Booking.CustomerName</p>
+            <p class="card-text">Payment Date: @Model.Booking.PaymentDate</p>
+            <p class="card-text">Contact No: @Model.Booking.CustomerPhoneNumber</p>
+            <p class="card-text">Customer Address: @Model.Booking.CustomerAddress</p>
+            <p class="card-text">Total Amount: @Model.Booking.TotalPayment</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 offset-1 mt-5">
+            <form action="SubmitReviewForm" class="text-capitalize" method="post">
+                <div class="wrapper">
+                    <div class="master">
+                        <h2>Review your experience</h2>
+
+                        <div class="rating-component">
+                            <div class="status-msg">
+                                <label for="UserRating">Rate Hotel:</label>
+                                <input class="form-control" type="hidden" name="UserRating" id="UserRating" required />
+                                <div class="stars" id="stars">
+                                    <i class="star far fa-star" data-index="1"></i>
+                                    <i class="star far fa-star" data-index="2"></i>
+                                    <i class="star far fa-star" data-index="3"></i>
+                                    <i class="star far fa-star" data-index="4"></i>
+                                    <i class="star far fa-star" data-index="5"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserComment">Comment:</label>
+                            <textarea name="UserComment" id="UserComment" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/image.js"></script>
+    <script src="~/js/review.js"></script>
+}
+
+<script>
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function () {
+            const index = parseInt(star.dataset.index);
+            document.getElementById('UserRating').value = index;
+            stars.forEach((s, i) => {
+                if (i < index) {
+                    s.classList.add('fas');
+                    s.classList.remove('far');
+                } else {
+                    s.classList.remove('fas');
+                    s.classList.add('far');
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    CKEDITOR.replace('UserComment');
+</script>

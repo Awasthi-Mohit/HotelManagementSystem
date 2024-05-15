@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+
+@if (!SignInManager.IsSignedIn(User))
+{
+  
+  <li class="nav-item">
+        <a class="nav-link text-white-50 " asp-area="Identity" asp-page="/Account/Login">
+
+            <i class="fas fa-sign-in-alt"></i>     <br />Login
+        </a>
+  </li>
+ 
+}

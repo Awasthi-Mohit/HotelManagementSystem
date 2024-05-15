@@ -1,0 +1,534 @@
+﻿@model HotelManagementSystem_Domain.Data.ViewModels.RoomViewModel
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<style>
+    .card {
+        width: 100%;
+        height: 100%;
+        border-block-color:black;
+    }
+
+    .container{
+        border-block-color:black;
+    }
+</style>
+<br />
+<br/>
+<div class="row justify-content-center">
+    <div class="col-md-3">
+        <div class="text-center">
+            <div class="mb-4">
+                <label class="form-label"><b>From</b></label>
+                <input class="form-control" id="fromDate"  type="date">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="text-center">
+            <div class="mb-4">
+                <label class="form-label"><b>To</b></label>
+                <input class="form-control" id="toDate" type="date">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <br/>
+        <button class="btn btn-success my-1 my-sm-1 " id="searchButton" type="submit">Search</button>
+    </div>
+</div>
+ <form method="post" id="CoursesForm" asp-action="Index" asp-controller="Userbooking" class="mx-auto text-center">
+
+    <div class="card-body">
+        <div class="row justify-content-center">
+            @foreach (var image in Model.RoomListbyhotel)
+            {
+                <div class="col-md-3 ">
+                    @if (image != null)
+                    {
+                        <div class="card">
+                            <div class="card-body ">
+                                <label class="align-content-center">
+                                    <input type="checkbox" name="selectedItems" value="@image.Id" data-price="@image.Price" data-room-no="@image.RoomNo" data-roomid="@image.Id" data-template="@image.Facilities" onchange="updateTotalPayment(); updateSelectedRooms()" />
+                                    <br />
+                                    <br />
+
+                                    <div class="card-body d-flex justify-content-center align-items-center" style="height: 20%;">
+
+                                        <img src="@Url.Action("GetImage", "Hotel", new { imageGuid = image.ImageUrl })" class="card-img-top" alt="Room Image" style="max-height: 200px; object-fit: cover;" />
+                                    </div>
+                                    <br />
+                                    <br />
+
+                                    <h5 class="card-title  text-center"><b>Room Type:</b> @image.RoomType</h5>
+                                    <p class="card-title  text-center"><b>Price:</b> @image.Price</p>
+                                    <p class="card-text  text-center"><b>Facilities:</b> @image.Facilities</p>
+                                    <p class="card-text  text-center"><b>Room No:</b> @image.RoomNo</p>
+                                    <div style="display: flex; justify-content:center;">
+                                        <button onclick="openImagePopup('@Url.Action("Rommmultiplictur", "Home", new { roomid = image.Id })')"
+                                                class="btn btn-primary">
+                                            View Images
+                                        </button>
+                                    </div>
+                                </label>
+
+                                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel">Image Slider</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @Url.Action("RoomMultiplictur", new { RoomId = image.Id })
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Image Not Found</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div>
+        @if (TempData["RoomNotAvailableMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["RoomNotAvailableMessage"]
+            </div>
+        }
+    </div>
+
+    <div class="container mt-2">
+
+        <div class="card">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">User Details</h4>
+                            <div class="row">
+
+                                @Html.AntiForgeryToken()
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.CustomerName" class="form-label">Name</label>
+                                        <input asp-for="Booking.CustomerName" id="txtName" maxlength="60" class="form-control" />
+                                        <span a sp-validation-for="Booking.CustomerName" class="text-danger"></span>
+                                        <div class="text-danger" id="message"></div>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.CustomerPhoneNumber" class="form-label">Phone Number</label>
+                                        <input asp-for="Booking.CustomerPhoneNumber" class="form-control" id="pickupPhoneNumber" maxlength="20" />
+                                        <span asp-validation-for="Booking.CustomerPhoneNumber" id="phoneNumberLengthMessage" class="text-danger"> </span>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.CustomerEmail" class="form-label">Email</label>
+                                        <input asp-for="Booking.CustomerEmail" class="form-control" autocomplete="username" aria-required="true" Id="Input_Email" placeholder=""
+                                               pattern="^[a-z0-9._%+-]+[a-z0-9.-]+\.[a-z]{2,}$"
+                                               title="Please enter a valid email address with lowercase letters and a valid format." />
+                                        <span class="text-danger" oninput="validateEmail(this)" id="Email" onkeyup="EmailCheck(this)"></span>
+                                    </div>
+                               
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.CustomerPinCode" class="form-label">PinCode</label>
+                                        <input asp-for="Booking.CustomerPinCode" id="postalCode" class="form-control" maxlength="6" />
+                                        <span asp-validation-for="Booking.CustomerPinCode" id="postalCodeError" class="text-danger"></span>
+                                        <span id="postalCodeLengthMessage" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.CustomerAddress" class="form-label">Address</label>
+                                        <input asp-for="Booking.CustomerAddress" id="input-street-address" class="form-control" />
+                                        <span asp-validation-for="Booking.CustomerAddress" id="streetAddressValidation" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label asp-for="Booking.TotalPayment" id="totalPaymentLabeluser" class="form-label">GrandTotal:</label>
+                                        <input asp-for="Booking.TotalPayment" id="totalAmountInput" type="hidden" />
+                                        <span asp-validation-for="Booking.TotalPayment" class="text-danger"></span>
+                                    </div>
+                                    <input type="hidden" id="checkInDate" name="checkInDate" value="">
+                                    <input type="hidden" id="checkOutDate" name="checkOutDate" value="">
+                               
+                                </div>
+                                
+
+
+                              <div class="card lg-3">
+                                <div class="card-body">
+                                <div>
+                                    <h4>Selected Rooms</h4>
+                                    <div id="selectedRoomsDisplay" name="selectedItems" onchange="updateTotalPaymentuser()" class="d-flex flex-wrap" data-price="100">
+                                        
+                                    </div>
+
+                                </div>
+
+
+                                </div>
+                              </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="submit" id="bookHotelBtn" onclick="getdetailsofroom()" class="btn btn-primary">Book Hotel</button>
+                                    </div>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+                        @*   Hotel *@
+                        <div class="card lg-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card " style="width: 15rem">
+                                            <img src="@Url.Action("GetImage", "Hotel", new { imageGuid = Model.HotelDetails.ImageUrl })" class="card-img-top" alt="Hotel Image" style="max-height: 1000%; object-fit: cover ;align-content-center">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating mb-2 blue-label">
+                                            <input asp-for="HotelDetails.Name" class="form-control text-primary" id="hotelName" readonly />
+                                            <label asp-for="HotelDetails.Name">Hotel Name</label>
+                                        </div>
+                                        <div class="form-floating mb-2">
+                                            <input asp-for="HotelDetails.Place" type="text" class="form-control  text-primary" id="hotelPlace" readonly />
+                                            <label asp-for="HotelDetails.Place">Location</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="stripeToken" name="stripeToken" />
+
+                        <div class="col">
+                            <a asp-controller="Home" asp-action="index" class="btn btn-danger">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/inputmask.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+    <script src="~/js/postalcode.js"></script>
+    <script src="~/js/room.js"></script>
+    <script src="~/js/mainuser.js"></script>
+    <script src="~/js/name.js"></script>
+    <script src="~/js/testing.js"></script>
+    <script src="~/js/selecting room.js"></script>
+    <script src="~/js/bookingpageuserscript.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nameInput = document.getElementById("txtName");
+        const messageDiv = document.getElementById("message");
+
+        nameInput.addEventListener("input", function () {
+            validateName();
+        });
+
+        nameInput.addEventListener("keydown", function (event) {
+            const allowedChars = /^[a-zA-Z\s,'"]+$/;
+            if (!allowedChars.test(event.key)) {
+                event.preventDefault();
+            }
+        });
+
+        nameInput.addEventListener("paste", function (event) {
+            event.preventDefault();
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const filteredText = pastedText.replace(/[^a-zA-Z\s,'"]/g, '');
+            document.execCommand("insertText", false, filteredText);
+            validateName();
+        });
+
+        function validateName() {
+            const name = nameInput.value.trim();
+            const nameRegex = /[^A-Za-z\s,'"]/g;
+
+            if (name.length < 3) {
+                messageDiv.textContent = "Name must be at least 3 characters long.";
+                nameInput.setCustomValidity("Name must be at least 3 characters long.");
+            } else if (name.length > 50) {
+                messageDiv.textContent = "Name must not exceed 50 characters.";
+                nameInput.setCustomValidity("Name must not exceed 50 characters.");
+            } else if (name.match(nameRegex)) {
+                messageDiv.textContent = "Name contains invalid characters.";
+                nameInput.setCustomValidity("Name contains invalid characters.");
+            } else {
+                messageDiv.textContent = "";
+                nameInput.setCustomValidity("");
+            }
+        }
+    });
+    document.getElementById("postalCode").addEventListener("input", function () {
+        var postalCodeInput = this.value;
+        var lengthMessage = document.getElementById("postalCodeLengthMessage");
+
+        if (postalCodeInput.length < 3) {
+            lengthMessage.textContent = "PinCode must be at least 3 characters.";
+        } else {
+            lengthMessage.textContent = "";
+        }
+    });
+
+    document.getElementById("postalCode").addEventListener("paste", function (event) {
+        var pastedText = (event.clipboardData || window.clipboardData).getData("text");
+        var resultingText = this.value + pastedText;
+
+        if (resultingText.length > 6) {
+            event.preventDefault();
+            alert("PinCode cannot exceed 6 characters.");
+        }
+    });
+    const phoneNumberInput = document.getElementById('pickupPhoneNumber');
+    const phoneNumberLengthMessage = document.getElementById('phoneNumberLengthMessage');
+
+    phoneNumberInput.addEventListener('input', () => {
+        const value = phoneNumberInput.value.trim();
+        const onlyNumbers = /^[0-9]*$/;
+
+        if (value.length > 0 && !onlyNumbers.test(value)) {
+            phoneNumberInput.value = value.replace(/\D/g, '');
+        }
+
+        if (phoneNumberInput.value.length < 10) {
+            phoneNumberLengthMessage.innerText = 'Phone number should be minimum 10 digits.';
+        } else if (phoneNumberInput.value.length > 15) {
+            phoneNumberLengthMessage.innerText = 'Phone number should be maximum 15 digits.';
+        } else {
+            phoneNumberLengthMessage.innerText = '';
+        }
+    });
+
+    phoneNumberInput.addEventListener('paste', (event) => {
+        event.preventDefault(); // Prevent default paste behavior
+        const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+        const onlyNumbers = /^[0-9]*$/;
+
+        // Check if all text is selected
+        const isAllTextSelected = document.activeElement.selectionStart === 0 && document.activeElement.selectionEnd === phoneNumberInput.value.length;
+
+        if (isAllTextSelected) {
+            phoneNumberInput.value = pastedText.replace(/\D/g, '').slice(0, 20); // Replace all selected text
+        } else {
+            const newValue = phoneNumberInput.value + pastedText.replace(/\D/g, '').slice(0, 20 - phoneNumberInput.value.length);
+            phoneNumberInput.value = newValue.slice(0, 20); // Limit to 20 characters
+
+            if (!onlyNumbers.test(newValue)) {
+                phoneNumberInput.value = newValue.replace(/\D/g, '');
+            }
+        }
+
+        validatePhoneNumber(); // Validate the input after pasting
+    });
+
+    function validatePhoneNumber() {
+        const value = phoneNumberInput.value.trim();
+        const onlyNumbers = /^[0-9]*$/;
+
+        if (value.length < 10) {
+            phoneNumberLengthMessage.innerText = 'Phone number should be minimum 10 digits.';
+        } else if (value.length > 15) {
+            phoneNumberLengthMessage.innerText = 'Phone number should be maximum 15 digits.';
+        } else {
+            phoneNumberLengthMessage.innerText = '';
+        }
+    }
+    //Email
+    function validateEmail(input) {
+        const email = input.value.toLowerCase();
+        const emailPattern = /^[a-z0-9]+@@[a-z0-9]+\.[a-z]{2,}$/; // Updated email pattern
+        const isValid = emailPattern.test(email);
+        const validationMessage = document.getElementById('emailValidationMessage');
+
+        if (!isValid) {
+            validationMessage.textContent = "Enter a valid email address with lowercase letters and a valid format.";
+        } else {
+            validationMessage.textContent = "";
+        }
+    }
+
+    // Function to clean and validate email input
+    function cleanAndValidateEmail(input) {
+        const value = input.value.trim();
+        const cleanedValue = value.replace(/[^a-z0-9@@.]/gi, ''); // Remove invalid characters
+        input.value = cleanedValue; // Update input value
+        validateEmail(input); // Validate email
+    }
+
+    // Add an event listener to the input element for input event
+    const inputEmail = document.getElementById('Input_Email');
+    inputEmail.addEventListener('input', () => {
+        cleanAndValidateEmail(inputEmail);
+    });
+
+    // Prevent pasting invalid characters and validate email after pasting
+    inputEmail.addEventListener('paste', (event) => {
+        event.preventDefault(); // Prevent default paste behavior
+        const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+        const cleanedText = pastedText.replace(/[^a-z0-9@@.] in,co com/gi, ''); // Remove invalid characters
+        document.execCommand("insertText", false, cleanedText); // Insert cleaned text
+        cleanAndValidateEmail(inputEmail); // Validate email after pasting
+    });
+    //Address
+    const streetAddressInput = document.getElementById('input-street-address');
+    const streetAddressValidationMessage = document.getElementById('streetAddressValidation');
+
+    // Function to validate input and disallow special characters
+    function validateInput(value) {
+        const isSpecialChar = /[!@@#$%^&*(),.?":{}|<>]/.test(value);
+        if (isSpecialChar) {
+            streetAddressValidationMessage.innerText = '';
+            return false;
+        }
+        return true;
+    }
+
+    streetAddressInput.addEventListener('input', () => {
+        const streetAddress = streetAddressInput.value.trim();
+
+        // Check for special characters
+        if (!validateInput(streetAddress)) {
+            streetAddressInput.value = streetAddress.replace(/[!@@#$%^&*(),.?":{}|<>]/g, '');
+            streetAddressValidationMessage.innerText = 'Special characters are not allowed.';
+            return;
+        }
+
+        // Check if street address length is less than 5
+        if (streetAddress.length < 5) {
+            streetAddressValidationMessage.innerText = 'Minimum 5 characters are required.';
+            return;
+        }
+
+        // Check if street address length is more than 50 but less than or equal to 115
+        if (streetAddress.length > 100 && streetAddress.length <= 115) {
+            streetAddressValidationMessage.innerText = 'Maximum 100 characters are allowed.';
+            return;
+        }
+
+        // Check if street address length is more than 115
+        if (streetAddress.length > 115) {
+            streetAddressInput.value = streetAddress.substring(0, 115);
+            streetAddressValidationMessage.innerText = 'Maximum 115 characters are allowed.';
+            return;
+        }
+
+        // If all conditions pass, clear validation message
+        streetAddressValidationMessage.innerText = '';
+    });
+    //notification
+    document.getElementById('notificationButton').addEventListener('click', function () {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                    showNotification();
+                } else {
+                    console.log('Notification permission denied.');
+                }
+            });
+        } else {
+            showNotification();
+        }
+    });
+
+
+    var notification = new Notification('Booking in progress', {
+        body: 'Booking  Hotel.'
+    });
+
+    notification.onclick = function () {
+        console.log('Notification clicked.');
+
+        // window.location.href = 'https://example.com';
+    };
+    function openImagePopup(url) {
+
+        $.get(url, function (data) {
+
+            $('#imageModal .modal-body').html(data);
+            $('#imageModal').modal('show');
+        });
+    } // Handle the click event of the button
+    $('.view-multiple-images-btn').click(function () {
+        // Perform a redirect to the picture action
+        window.location.href = '/Hotel/pic';
+    });
+    document.getElementById('notificationButton').addEventListener('click', function () {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                    showNotification();
+                } else {
+                    console.log('Notification permission denied.');
+                }
+            });
+        } else {
+            showNotification();
+        }
+    });
+
+
+    var notification = new Notification('Booking in progress', {
+        body: 'Booking  Hotel.'
+    });
+
+    notification.onclick = function () {
+        console.log('Notification clicked.');
+
+        // window.location.href = 'https://example.com';
+    };
+    $(document).ready(function () {
+        $("#checkInDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0, // Restrict past dates
+            onSelect: function (selectedDate) {
+                var checkOutMinDate = $(this).datepicker('getDate');
+                checkOutMinDate.setDate(checkOutMinDate.getDate() + 1);
+                $("#checkOutDate").datepicker("option", "minDate", checkOutMinDate);
+            }
+        });
+
+        $("#checkOutDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 1,
+        });
+    });
+
+</script>
+
+

@@ -1,0 +1,130 @@
+﻿@model List<HotelManagementSystem_Domain.Data.HotelModel>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <style>
+        body {
+         background-color: gainsboro;
+        }
+
+        .card {
+            border: 0;
+            overflow: hidden; /* Ensure overflowing images are hidden */
+        }
+        /* Styling the scrollbar for WebKit-based browsers like Chrome and Safari */
+        .scrollable-container::-webkit-scrollbar {
+            width: 12px; /* width of the scrollbar */
+        }
+
+        .scrollable-container::-webkit-scrollbar-track {
+            background: #f0f0f0; /* background color of the scrollbar track */
+        }
+
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #3498db; 
+            border-radius: 6px; 
+            border: 3px solid transparent; 
+        }
+
+            .scrollable-container::-webkit-scrollbar-thumb:hover {
+                background-color: #2980b9; 
+            }
+
+        .scrollable-container {
+            scrollbar-width: thin; /* makes the scrollbar thinner */
+            scrollbar-color: #3498db #f0f0f0; /* color for thumb and track */
+        }
+
+      
+    </style>
+</head>
+<br/>
+
+<body>
+    <div class="row">
+        <marquee behavior="scroll" direction="left" class="text-center fw-bold" style="color:darkblue; font-family:Arial,sans-serif;font-size:3em;"> Welcome To Bookinggo.com  </marquee>
+    </div>
+    
+    <div class="scrollable-container" style="height: 80vh; overflow-y: auto;">
+        <!-- Height adjusted to 70% of viewport height -->
+        <div class="row">
+            @foreach (var hotel in Model)
+            {
+                <div class="col-lg-3 col-md-6">
+                    <div class="row p-2">
+                        <div class="col-12 p-1" style="border: 2px solid black; border-radius: 15px;">
+
+                            <div class="card" style="border: 0px; text-align: center;">
+                                <!-- Centering the content -->
+
+                                <div class="pl-1">
+                                    <p class="card-title h5"><b style="color:#2c3e50;"></b></p>
+                                    <p class="card-title text-primary">Hotel Name:-<b>@hotel.Name</b></p>
+                                </div>
+
+                                <div class="card" style="border: 1px; display: flex; justify-content: center; align-items: center;">
+                                  
+                                    <img src="@Url.Content(hotel.ImageUrl)" alt="Product Image" height="200px"  />
+                                </div>
+
+                                <div class="pl-1">
+                                    <p class="card-title h5"><b style="color:#2c3e50;"></b></p>
+                                    <p class="card-title text-primary">Location:-<b>@hotel.Place</b></p>
+                                </div>
+
+                                <div class="pl-1">
+                                    <div class="col-12 ">
+                                        <button onclick="window.location.href='@Url.Action("Index", "Userbooking", new { hotelId = hotel.Id })'" class="btn btn-primary" id="sendButton" onclick="confirmCreate()" value="Send Message">Books Hotel</button>
+                                        <button onclick="window.location.href='@Url.Action("ShowReviews", "Home", new { hotelId = hotel.Id })'" class="btn btn-info">Reviews</button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+   
+
+</body>
+
+</html>
+<script>
+    document.getElementById('sendButton').addEventListener('click', function () {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                    showNotification();
+                }
+            });
+        } else {
+            showNotification();
+        }
+    });
+
+    function showNotification() {
+        var notification = new Notification('Hotel, Notification!', {
+            body: 'Hotel Created.'
+        });
+    }
+
+</script>
+<script>
+    $(document).ready(function () {
+        const container = $('.scrollable-container');
+        const ps = new PerfectScrollbar(container[0]);
+    });
+</script>
+<script>
+    (function ($) {
+        $(window).on("load", function () {
+            $(".content").mCustomScrollbar();
+        });
+    })(jQuery);
+
+</script>

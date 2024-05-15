@@ -1,0 +1,226 @@
+﻿@model HotelManagementSystem_Domain.Data.DTO.HotelModelDTO
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<head>
+    <style>
+        body {
+            background-color: #e9ecef; /* Light gray background color for the entire body */
+            margin: 0; /* Remove default margin for a cleaner look */
+        }
+
+        .hotel-form {
+            max-width: 400px;
+            margin: auto;
+            background-color: #f8f9fa; 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: bold; 
+        }
+
+        .img-fluid {
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .is-invalid {
+            border-color: red !important;
+        }
+    </style>
+</head>
+
+
+<form asp-action="CreateHotel" method="post" enctype="multipart/form-data" class="my-4 hotel-form">
+    @Html.AntiForgeryToken()
+
+    
+   
+    <div class="form-floating">
+        <label asp-for="Name" class="form-label"> </label>
+        <input asp-for="Name" class="form-control" autocomplete="username" maxlength="60" id="txtName" aria-required="true" placeholder="" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="text-danger" id="message"></div>
+ 
+
+    <div class="mb-3">
+        <label asp-for="Place" class="form-label">Location</label>
+        <input asp-for="Place" class="form-control" required />
+        <span asp-validation-for="Place" class="text-danger"></span>
+
+    </div>
+    <div class="mb-3">
+        <label asp-for="TotalRoom" class="form-label">TotalRoom</label>
+        <input asp-for="TotalRoom" class="form-control" id="pickupPhoneNumber" maxlength="6" required />
+        <span id="phoneNumberLengthMessage" class="text-danger"></span>
+
+    </div>
+
+
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+        <div class="input-group">
+            <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" accept=".jpg, .jpeg, .png" required />
+        </div>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+  <div class="mb-3">
+        <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+  </div>
+    <input type="hidden" name="HotelId" value="@ViewBag.HotelId" />
+    @*     <button type="submit" id="showNotificationBtn" value="Send Message" class="btn btn-primary">Create Hotel</button>
+     *@    <button type="submit" id="showNotificationBtn" class="btn btn-primary">Create Hotel</button>
+
+    <a asp-action="index" class="btn btn-danger">Back to List</a>
+
+</form>
+
+
+
+
+@section Scripts
+{  
+    <script src="~/js/createhotel.js"></script>
+    <script src="~/js/image.js"></script>
+    
+} 
+@* Name&Phonenumber&notification*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nameInput = document.getElementById("txtName");
+        const messageDiv = document.getElementById("message");
+
+        nameInput.addEventListener("input", function () {
+            validateName();
+        });
+
+        nameInput.addEventListener("keydown", function (event) {
+            const allowedChars = /^[a-zA-Z\s,'"]+$/;
+            if (!allowedChars.test(event.key)) {
+                event.preventDefault();
+            }
+        });
+
+        nameInput.addEventListener("paste", function (event) {
+            event.preventDefault();
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const filteredText = pastedText.replace(/[^a-zA-Z\s,'"]/g, '');
+            document.execCommand("insertText", false, filteredText);
+            validateName();
+        });
+
+        function validateName() {
+            const name = nameInput.value.trim();
+            const nameRegex = /[^A-Za-z\s,'"]/g;
+
+            if (name.length < 3) {
+                messageDiv.textContent = "Name must be at least 3 characters long.";
+                nameInput.setCustomValidity("Name must be at least 3 characters long.");
+            } else if (name.length > 50) {
+                messageDiv.textContent = "Name must not exceed 50 characters.";
+                nameInput.setCustomValidity("Name must not exceed 50 characters.");
+            } else if (name.match(nameRegex)) {
+                messageDiv.textContent = "Name contains invalid characters.";
+                nameInput.setCustomValidity("Name contains invalid characters.");
+            } else {
+                messageDiv.textContent = "";
+                nameInput.setCustomValidity("");
+            }
+        }
+    });
+    //phoneNumber
+    const phoneNumberInput = document.getElementById('pickupPhoneNumber');
+    const phoneNumberLengthMessage = document.getElementById('phoneNumberLengthMessage');
+
+    phoneNumberInput.addEventListener('input', () => {
+        const value = phoneNumberInput.value.trim();
+        const onlyNumbers = /^[0-9]*$/;
+
+        if (value.length > 0 && !onlyNumbers.test(value)) {
+            phoneNumberInput.value = value.replace(/\D/g, '');
+        }
+
+        if (phoneNumberInput.value.length < 1) {
+            phoneNumberLengthMessage.innerText = ' minimum 1 digits.';
+        } else if (phoneNumberInput.value.length > 9) {
+            phoneNumberLengthMessage.innerText = ' maximum 9 digits.';
+        } else {
+            phoneNumberLengthMessage.innerText = '';
+        }
+    });
+
+    phoneNumberInput.addEventListener('paste', (event) => {
+        event.preventDefault(); // Prevent default paste behavior
+        const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+        const onlyNumbers = /^[0-9]*$/;
+
+        // Check if all text is selected
+        const isAllTextSelected = document.activeElement.selectionStart === 0 && document.activeElement.selectionEnd === phoneNumberInput.value.length;
+
+        if (isAllTextSelected) {
+            phoneNumberInput.value = pastedText.replace(/\D/g, '').slice(0, 10); // Replace all selected text
+        } else {
+            const newValue = phoneNumberInput.value + pastedText.replace(/\D/g, '').slice(0, 10 - phoneNumberInput.value.length);
+            phoneNumberInput.value = newValue.slice(0, 10); // Limit to 20 characters
+
+            if (!onlyNumbers.test(newValue)) {
+                phoneNumberInput.value = newValue.replace(/\D/g, '');
+            }
+        }
+
+        validatePhoneNumber(); // Validate the input after pasting
+    });
+
+    function validatePhoneNumber() {
+        const value = phoneNumberInput.value.trim();
+        const onlyNumbers = /^[0-9]*$/;
+
+        if (value.length < 1) {
+            phoneNumberLengthMessage.innerText = ' minimum 1 digits.';
+        } else if (value.length > 8) {
+            phoneNumberLengthMessage.innerText = 'maximum 9 digits.';
+        } else {
+            phoneNumberLengthMessage.innerText = '';
+        }
+    }
+    //notificaion
+    $(document).ready(function () {
+        $("#showNotificationBtn").click(function () {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        var notification = new Notification("Task Updated ", {
+                            body: "Task Updated ",
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#showNotificationBtn").click(function () {
+            // Your existing code for creating the hotel...
+
+            if ("Notification" in window) {
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        var notification = new Notification("Hotel Created", {
+                            body: "Your hotel has been successfully created.",
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+</script>

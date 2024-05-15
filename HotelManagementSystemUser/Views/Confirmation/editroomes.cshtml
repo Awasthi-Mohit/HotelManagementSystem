@@ -1,0 +1,71 @@
+﻿@model HotelManagementSystem_Domain.Data.RoomTypeModel
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="EditRoom" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label asp-for="RoomType" class="form-label">Room Type</label>
+                    <select asp-for="RoomType" class="form-control">
+                        <option value="Delux Suite">Delux Suite</option>
+                        <option value="Luxury">Luxury</option>
+                        <option value="Studio">Studio</option>
+                    </select>
+                    <span asp-validation-for="RoomType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Facilities" class="control-label">Facilities</label>
+                    <input asp-for="Facilities" class="form-control" />
+                    <span asp-validation-for="Facilities" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RoomNo" class="control-label">RoomNo</label>
+                    <input asp-for="RoomNo" class="form-control" />
+                    <span asp-validation-for="RoomNo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label">Price</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Current Image</label>
+                    <div class="input-group">
+                        <img src="@Url.Action("GetImage", "Hotel", new { imageGuid = ViewBag.CurrentImageUrl })" alt="Current Image" class="img-fluid" style="max-width: 200px;" />
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Image Upload</label>
+                    <div class="input-group">
+                        <input type="file" name="files" id="uploadbox" class="form-control" onchange="previewImage()" />
+                    </div>
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded" style="display: none; max-width: 100%;" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-action="index" asp-controller="Home" class="btn btn-danger">Back to List</a>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/image.js"></script>
+    <script src="~/js/review.js"></script>
+}

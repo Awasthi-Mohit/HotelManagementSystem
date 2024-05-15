@@ -1,0 +1,135 @@
+﻿@model List<string>
+
+<style>
+    .slider {
+        position: relative; /* Ensure relative positioning for absolute positioned buttons */
+    }
+
+    .controls {
+        position: absolute; 
+        top: 50%; /* Position vertically in the middle of the slider */
+        left: 0; /* Position horizontally at the left of the slider */
+        transform: translateY(-50%); /* Adjust vertical position */
+    }
+
+        .controls button {
+            margin: 0 5px; /* Add margin between buttons */
+            padding: 5px 10px; /* Add padding to buttons */
+            background-color: #007bff; /* Set background color */
+            color: #fff; /* Set text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Add border radius */
+            cursor: pointer; /* Change cursor on hover */
+        }
+
+            .controls button:hover {
+                background-color: #0056b3; /* Darker background color on hover */
+            }
+
+    .slider {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px; /* Adjust the height as needed */
+    }
+
+    .slide {
+        display: none;
+        width: 100%; /* Ensure slides take full width */
+        text-align: center; /* Center images horizontally */
+    }
+
+    .image-container {
+        display: inline-block; /* Allow container to shrink to fit image */
+    }
+
+    .slide img {
+        max-height: 300px;
+        max-width: 300px;
+        object-fit: contain; /* Ensure the image fits within its container */
+    }
+
+    .no-image-preview {
+        text-align: center; /* Center the text horizontally */
+        font-size: 16px; /* Adjust font size */
+        color: #555; /* Set a medium gray color */
+        padding: 20px; /* Add padding for spacing */
+        border: 1px solid #ddd; /* Light border around the paragraph */
+        background-color: #f9f9f9; /* Light background color */
+        border-radius: 5px; /* Rounded corners */
+        margin-top: 50px; /* Add
+</style>
+<div class="slider-container">
+    @if (Model != null && Model.Any())
+    {
+        <div class="slider">
+            @foreach (var imageUrl in Model)
+            {
+                <div class="slide">
+                    <div class="image-container">
+                        <img src="@Url.Content("~/"+@imageUrl)" alt="Room Picture">
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    }
+    else
+    {
+        <p class="no-image-preview">
+            No image to preview.
+        </p>
+    }
+  
+</div>
+
+    <script>
+        $(document).ready(function() {
+            const slides = $('.slide');
+            const prevBtn = $('#prevBtn');
+            const nextBtn = $('#nextBtn');
+            let currentIndex = 0;
+            let intervalId;
+
+            function showSlide(index) {
+                slides.hide(); // Hide all slides
+                slides.eq(index).show(); // Show the slide at the given index
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
+                showSlide(currentIndex);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
+                showSlide(currentIndex);
+            }
+
+            function startAutoSlide() {
+                intervalId = setInterval(nextSlide, 3000); // Change slide every 3 seconds (3000 milliseconds)
+            }
+
+            function stopAutoSlide() {
+                clearInterval(intervalId);
+            }
+
+            prevBtn.click(function() {
+                prevSlide();
+                stopAutoSlide(); // Stop auto sliding when manual navigation occurs
+            });
+
+            nextBtn.click(function() {
+                nextSlide();
+                stopAutoSlide(); // Stop auto sliding when manual navigation occurs
+            });
+
+            showSlide(currentIndex);
+            startAutoSlide(); // Start automatic sliding when the page loads
+        });
+    </script>
+
+
